@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1013">
+  <title>Panel del barbero</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💈</text></svg>">
+</head>
+<body>
+  <div class="app">
+
+    <!-- ============ LOGIN ============ -->
+    <main id="loginView">
+      <header class="hero">
+        <div class="logo">💈</div>
+        <h1>Panel del barbero</h1>
+        <p>Acceso restringido</p>
+      </header>
+      <div class="pole"></div>
+
+      <div class="card">
+        <label class="field">
+          <span>Contraseña</span>
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password">
+        </label>
+        <p id="loginError" class="error" hidden></p>
+        <button class="btn primary" id="btnLogin" type="button">Entrar</button>
+      </div>
+    </main>
+
+    <!-- ============ PANEL ============ -->
+    <main id="panelView" hidden>
+      <div class="topbar">
+        <h1>💈 <span id="shopName">Barbería</span></h1>
+        <button class="btn ghost" id="btnLogout" type="button">Salir</button>
+      </div>
+
+      <div class="filters">
+        <input type="date" id="fecha">
+        <button class="btn ghost" id="btnHoy" type="button" style="width:auto;padding:12px 16px">Hoy</button>
+        <button class="btn ghost" id="btnTodas" type="button" style="width:auto;padding:12px 16px">Todas</button>
+      </div>
+
+      <div class="filters">
+        <input type="search" id="buscar" placeholder="🔎 Buscar por nombre o teléfono…" autocomplete="off">
+      </div>
+
+      <div class="filters">
+        <button class="btn ghost" id="btnStats" type="button" style="width:auto;padding:12px 16px">📊 Estadísticas</button>
+        <button class="btn ghost" id="btnExport" type="button" style="width:auto;padding:12px 16px">⬇ Exportar citas</button>
+        <button class="btn ghost" id="btnImport" type="button" style="width:auto;padding:12px 16px">⬆ Importar</button>
+        <input type="file" id="fileImport" accept=".json,application/json,text/plain" hidden>
+      </div>
+
+      <div id="statsBox" hidden></div>
+
+      <div class="chips" id="chips"></div>
+      <div id="proxima" class="muted" style="margin:-6px 0 12px"></div>
+
+      <div id="lista"></div>
+    </main>
+
+    <footer id="foot"></footer>
+  </div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

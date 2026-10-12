@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1013">
+  <title>Reservar cita</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>">
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="logo">✂️</div>
+      <h1 id="shopName">Barbería</h1>
+      <p>Reserva tu cita en segundos</p>
+    </header>
+    <div class="pole"></div>
+
+    <!-- ============ FORMULARIO ============ -->
+    <main id="formView" class="card">
+      <form id="form" novalidate>
+        <label class="field">
+          <span>1. Tu nombre</span>
+          <input id="nombre" type="text" placeholder="Ej: Carlos Pérez" autocomplete="name" maxlength="60" required>
+        </label>
+
+        <label class="field">
+          <span>2. Número de teléfono</span>
+          <input id="telefono" type="tel" inputmode="tel" placeholder="Ej: 584121234567" autocomplete="tel" maxlength="20" required>
+          <small>Con código de país, sin espacios ni guiones.</small>
+        </label>
+
+        <div class="field">
+          <span>3. Fecha de la cita</span>
+          <input id="fecha" type="date" required>
+        </div>
+
+        <div class="field">
+          <span>4. Hora</span>
+          <div id="slots" class="slots">
+            <div class="muted" style="grid-column:1/-1">Elige una fecha para ver las horas disponibles.</div>
+          </div>
+          <small id="slotsInfo"></small>
+        </div>
+
+        <div class="field">
+          <span>5. ¿Qué te vas a hacer?</span>
+          <select id="servicio" required>
+            <option value="">Selecciona un servicio…</option>
+          </select>
+          <input id="servicioOtro" type="text" placeholder="Cuéntanos qué necesitas" maxlength="120" hidden style="margin-top:8px">
+        </div>
+
+        <label class="field">
+          <span>Comentario <span style="color:var(--muted);font-weight:400">(opcional)</span></span>
+          <textarea id="notas" rows="2" maxlength="300" placeholder="Algún detalle importante…"></textarea>
+        </label>
+
+        <p id="error" class="error" hidden aria-live="polite"></p>
+
+        <button class="btn primary" id="submit" type="submit">Reservar cita</button>
+      </form>
+
+      <div class="mine">
+        <button class="btn ghost" id="btnMis" type="button">📋 Ver / cancelar mis citas</button>
+        <div id="misBox" hidden>
+          <div id="misLista"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ CONFIRMACIÓN ============ -->
+    <main id="okView" class="card" hidden>
+      <div class="ok-hero">
+        <div class="check">✓</div>
+        <h2>¡Cita reservada!</h2>
+        <p>Te esperamos. Guarda estos datos.</p>
+      </div>
+
+      <div class="ticket" id="ticket"></div>
+
+      <div class="stack">
+        <a id="btnWa" class="btn wa" href="#" target="_blank" rel="noopener" hidden>📲 Avisar por WhatsApp</a>
+        <button class="btn ghost" id="btnOtra" type="button">Reservar otra cita</button>
+      </div>
+    </main>
+
+    <footer>
+      <span id="horario"></span>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
