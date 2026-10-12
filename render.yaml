@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: barberia-citas
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SHOP_NAME
+        sync: false
+      - key: SHOP_WHATSAPP
+        sync: false
