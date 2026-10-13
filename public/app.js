@@ -1,7 +1,9 @@
 const $ = (id) => document.getElementById(id);
+const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
 
 let CONFIG = null;
 let horaSel = null;
+let ABIERTO = true;
 const MIS_KEY = 'barberia_mis_citas';
 
 // ---------- utilidades ----------
@@ -33,6 +35,69 @@ function mostrarError(msg) {
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+// ---------- apariencia configurable ----------
+function aplicarApariencia(c) {
+  const col = (c && c.colores) || {};
+  const raiz = document.documentElement;
+  const hex = (v, alt) => (/^#[0-9a-fA-F]{3,8}$/.test(v || '') ? v : alt);
+  raiz.style.setProperty('--gold', hex(col.principal, '#f2b544'));
+  raiz.style.setProperty('--gold-dark', hex(col.principalOscuro, '#d99e2c'));
+  raiz.style.setProperty('--bg', hex(col.fondo, '#0e1013'));
+
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', hex(col.tema, '#0e1013'));
+
+  if (c && c.logo) $('logo').textContent = c.logo;
+  if (c && typeof c.tagline === 'string') $('tagline').textContent = c.tagline;
+}
+
+// ---------- textos configurables ----------
+function aplicarTextos(c) {
+  const t = (c && c.textos) || {};
+  const set = (id, val, def) => { const el = $(id); if (el) el.textContent = val || def; };
+  set('shopName', c && c.shopName, 'Barbería');
+  document.title = `Reservar cita · ${(c && c.shopName) || 'Barbería'}`;
+  set('labelNombre', t.etiquetaNombre, '1. Tu nombre');
+  set('labelTelefono', t.etiquetaTelefono, '2. Número de teléfono');
+  set('labelFecha', t.etiquetaFecha, '3. Fecha de la cita');
+  set('labelHora', t.etiquetaHora, '4. Hora');
+  set('labelServicio', t.etiquetaServicio, '5. ¿Qué te vas a hacer?');
+  set('okTitulo', t.tituloConfirmacion, '¡Cita reservada!');
+  set('okTexto', t.subtituloConfirmacion, 'Te esperamos. Guarda estos datos.');
+  const btn = $('submit');
+  if (btn && ABIERTO) btn.textContent = t.botonReservar || 'Reservar cita';
+  const btnMis = $('btnMis');
+  if (btnMis) btnMis.textContent = t.botonMisCitas || '📋 Ver / cancelar mis citas';
+}
+
+function textoBotonReservar() {
+  return (CONFIG && CONFIG.textos && CONFIG.textos.botonReservar) || 'Reservar cita';
+}
+
+// ---------- estado abierto / cerrado del local ----------
+function aplicarEstado() {
+  const box = $('cerradoBox');
+  const btn = $('submit');
+  if (!box || !btn) return;
+  if (ABIERTO) {
+    box.hidden = true;
+    btn.disabled = false;
+    btn.textContent = textoBotonReservar();
+  } else {
+    box.hidden = false;
+    btn.disabled = true;
+    btn.textContent = 'Cerrado · no se puede reservar';
+  }
+}
+
+async function refrescarEstado() {
+  try {
+    const r = await fetch('/api/estado');
+    ABIERTO = (await r.json()).abierto === true;
+  } catch {}
+  aplicarEstado();
+}
+
 // ---------- carga inicial ----------
 async function init() {
   try {
@@ -44,12 +109,18 @@ async function init() {
 
   $('shopName').textContent = CONFIG.shopName;
   document.title = `Reservar cita · ${CONFIG.shopName}`;
+  ABIERTO = CONFIG.abierto !== false;
+  aplicarEstado();
+
+  aplicarApariencia(CONFIG);
+  aplicarTextos(CONFIG);
 
   const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
   const abiertos = CONFIG.diasAbiertos.map((d) => dias[d]);
   const rango = abiertos.length === 1 ? abiertos[0] : `${abiertos[0]} a ${abiertos[abiertos.length - 1]}`;
   $('horario').textContent =
-    `${CONFIG.shopName} · ${rango} de ${CONFIG.horas[0]} a ${CONFIG.horas[CONFIG.horas.length - 1]}`;
+    `${CONFIG.shopName} · ${rango} de ${CONFIG.horas[0]} a ${CONFIG.horas[CONFIG.horas.length - 1]}` +
+    (CONFIG.footer ? ` · ${CONFIG.footer}` : '');
 
   const sel = $('servicio');
   CONFIG.servicios.forEach((s) => {
@@ -73,6 +144,7 @@ async function init() {
   });
 
   await cargarHoras();
+  setInterval(refrescarEstado, 60 * 1000);
 }
 
 // ---------- horas disponibles ----------
@@ -128,18 +200,22 @@ async function cargarHoras() {
 }
 
 // ---------- reserva ----------
-$('form').addEventListener('submit', async (e) => {
+on('form', 'submit', async (e) => {
   e.preventDefault();
   mostrarError('');
 
+  if (!ABIERTO) return mostrarError('La barbería está cerrada por ahora. Vuelve más tarde.');
+
   const nombre = $('nombre').value.trim();
-  const telefono = $('telefono').value.trim();
+  let telLocal = $('telefono').value.replace(/\D/g, '');
+  if (telLocal.length === 11 && telLocal.startsWith('1')) telLocal = telLocal.slice(1);
+  const telefono = '1' + telLocal;
   const fecha = $('fecha').value;
   const servicio = $('servicio').value;
   const servicioFinal = servicio === 'Otro' ? $('servicioOtro').value.trim() : servicio;
 
   if (nombre.length < 3) return mostrarError('Escribe tu nombre completo.');
-  if (telefono.replace(/\D/g, '').length < 7) return mostrarError('Escribe un número de teléfono válido (con código de país).');
+  if (telLocal.length < 7 || telLocal.length > 12) return mostrarError('Escribe un número de teléfono válido (10 dígitos).');
   if (!fecha) return mostrarError('Elige la fecha de tu cita.');
   if (!horaSel) return mostrarError('Elige la hora de tu cita.');
   if (!servicio) return mostrarError('Elige qué te vas a hacer.');
@@ -210,7 +286,7 @@ function mostrarConfirmacion(cita) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-$('btnOtra').addEventListener('click', () => {
+on('btnOtra', 'click', () => {
   $('form').reset();
   horaSel = null;
   $('servicioOtro').hidden = true;
@@ -322,7 +398,7 @@ async function cancelarMi(id) {
   }
 }
 
-$('btnMis').addEventListener('click', async () => {
+on('btnMis', 'click', async () => {
   const box = $('misBox');
   box.hidden = !box.hidden;
   $('btnMis').textContent = box.hidden

@@ -4,9 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0e1013">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Barber Panel">
   <title>Panel del barbero</title>
   <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💈</text></svg>">
+  <link rel="icon" href="/icon-192.png">
 </head>
 <body>
   <div class="app">
@@ -14,9 +20,9 @@
     <!-- ============ LOGIN ============ -->
     <main id="loginView">
       <header class="hero">
-        <div class="logo">💈</div>
-        <h1>Panel del barbero</h1>
-        <p>Acceso restringido</p>
+        <div class="logo" id="loginLogo">💈</div>
+        <h1 id="loginTitulo">Panel del barbero</h1>
+        <p id="loginSubtitulo">Acceso restringido</p>
       </header>
       <div class="pole"></div>
 
@@ -33,9 +39,15 @@
     <!-- ============ PANEL ============ -->
     <main id="panelView" hidden>
       <div class="topbar">
-        <h1>💈 <span id="shopName">Barbería</span></h1>
-        <button class="btn ghost" id="btnLogout" type="button">Salir</button>
+        <h1><span id="logoPanel">💈</span> <span id="shopName">Barbería</span></h1>
+        <div class="topbar-btns">
+          <button class="btn ghost" id="btnAvisos" type="button" hidden>🔔 Avisos</button>
+          <a class="btn ghost" id="btnDev" href="/dev">⚙️ Desarrollador</a>
+          <button class="btn ghost" id="btnLogout" type="button">Salir</button>
+        </div>
       </div>
+
+      <button class="estado-btn abierto" id="btnEstado" type="button">🟢 Abierto · recibiendo citas</button>
 
       <div class="filters">
         <input type="date" id="fecha">

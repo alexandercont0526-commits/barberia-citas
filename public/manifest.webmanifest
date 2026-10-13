@@ -1,0 +1,16 @@
+{
+  "name": "BARBER XANDER · Panel",
+  "short_name": "Barber Panel",
+  "description": "Panel de citas de la barbería: confirma, completa y recibe avisos de tus citas.",
+  "start_url": "/panel",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1013",
+  "theme_color": "#0e1013",
+  "lang": "es",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

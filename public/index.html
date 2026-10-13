@@ -6,38 +6,45 @@
   <meta name="theme-color" content="#0e1013">
   <title>Reservar cita</title>
   <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>">
+  <link rel="icon" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
   <div class="app">
     <header class="hero">
-      <div class="logo">✂️</div>
+      <div class="logo" id="logo">✂️</div>
       <h1 id="shopName">Barbería</h1>
-      <p>Reserva tu cita en segundos</p>
+      <p id="tagline">Reserva tu cita en segundos</p>
     </header>
     <div class="pole"></div>
 
     <!-- ============ FORMULARIO ============ -->
     <main id="formView" class="card">
+      <div id="cerradoBox" class="aviso-cerrado" hidden>
+        🔴 Cerrado por ahora. No estamos recibiendo reservas; vuelve más tarde. 💈
+      </div>
       <form id="form" novalidate>
         <label class="field">
-          <span>1. Tu nombre</span>
+          <span id="labelNombre">1. Tu nombre</span>
           <input id="nombre" type="text" placeholder="Ej: Carlos Pérez" autocomplete="name" maxlength="60" required>
         </label>
 
         <label class="field">
-          <span>2. Número de teléfono</span>
-          <input id="telefono" type="tel" inputmode="tel" placeholder="Ej: 584121234567" autocomplete="tel" maxlength="20" required>
-          <small>Con código de país, sin espacios ni guiones.</small>
+          <span id="labelTelefono">2. Número de teléfono</span>
+          <div class="phone-field">
+            <span class="phone-prefix">+1</span>
+            <input id="telefono" type="tel" inputmode="numeric" placeholder="809 555 1234" autocomplete="tel-national" maxlength="14" required>
+          </div>
+          <small id="ayudaTelefono">Escribe tu número sin el +1 ni espacios (10 dígitos).</small>
         </label>
 
         <div class="field">
-          <span>3. Fecha de la cita</span>
+          <span id="labelFecha">3. Fecha de la cita</span>
           <input id="fecha" type="date" required>
         </div>
 
         <div class="field">
-          <span>4. Hora</span>
+          <span id="labelHora">4. Hora</span>
           <div id="slots" class="slots">
             <div class="muted" style="grid-column:1/-1">Elige una fecha para ver las horas disponibles.</div>
           </div>
@@ -45,7 +52,7 @@
         </div>
 
         <div class="field">
-          <span>5. ¿Qué te vas a hacer?</span>
+          <span id="labelServicio">5. ¿Qué te vas a hacer?</span>
           <select id="servicio" required>
             <option value="">Selecciona un servicio…</option>
           </select>
@@ -53,7 +60,7 @@
         </div>
 
         <label class="field">
-          <span>Comentario <span style="color:var(--muted);font-weight:400">(opcional)</span></span>
+          <span id="labelComentario">Comentario <span style="color:var(--muted);font-weight:400">(opcional)</span></span>
           <textarea id="notas" rows="2" maxlength="300" placeholder="Algún detalle importante…"></textarea>
         </label>
 
@@ -74,8 +81,8 @@
     <main id="okView" class="card" hidden>
       <div class="ok-hero">
         <div class="check">✓</div>
-        <h2>¡Cita reservada!</h2>
-        <p>Te esperamos. Guarda estos datos.</p>
+        <h2 id="okTitulo">¡Cita reservada!</h2>
+        <p id="okTexto">Te esperamos. Guarda estos datos.</p>
       </div>
 
       <div class="ticket" id="ticket"></div>

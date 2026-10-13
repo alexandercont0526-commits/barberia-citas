@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1013">
+  <title>Sección de desarrollador</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/dev.css">
+  <link rel="icon" href="/favicon.png">
+</head>
+<body>
+  <div class="app">
+
+    <!-- ============ LOGIN ============ -->
+    <main id="loginView">
+      <header class="hero">
+        <div class="logo" id="loginLogo">🛠️</div>
+        <h1 id="loginTitulo">Sección de desarrollador</h1>
+        <p id="loginSubtitulo">Contraseña de desarrollador</p>
+      </header>
+      <div class="pole"></div>
+      <div class="card">
+        <label class="field">
+          <span>Contraseña</span>
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password">
+        </label>
+        <p id="loginError" class="error" hidden></p>
+        <button class="btn primary" id="btnLogin" type="button">Entrar</button>
+        <a class="btn ghost" href="/panel" style="margin-top:10px;text-align:center;text-decoration:none">← Volver al panel</a>
+      </div>
+    </main>
+
+    <!-- ============ DEV ============ -->
+    <main id="devView" hidden>
+      <div class="topbar">
+        <h1>🛠️ <span id="shopName">Barbería</span></h1>
+        <div class="topbar-btns">
+          <a class="btn ghost" href="/panel">← Panel</a>
+          <button class="btn ghost" id="btnLogout" type="button">Salir</button>
+        </div>
+      </div>
+
+      <p id="aviso" class="aviso" hidden></p>
+
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="identidad">Identidad</button>
+        <button class="tab" data-tab="servicios">Servicios</button>
+        <button class="tab" data-tab="horario">Horario</button>
+        <button class="tab" data-tab="apariencia">Apariencia</button>
+        <button class="tab" data-tab="textos">Textos</button>
+        <button class="tab" data-tab="whatsapp">WhatsApp</button>
+        <button class="tab" data-tab="iconos">Iconos</button>
+        <button class="tab" data-tab="seguridad">Seguridad</button>
+        <button class="tab" data-tab="avanzado">Avanzado</button>
+      </nav>
+
+      <!-- IDENTIDAD -->
+      <section class="card tabpane" data-pane="identidad">
+        <h2>Identidad del negocio</h2>
+        <label class="field"><span>Nombre del negocio</span>
+          <input id="c_shopName" type="text" maxlength="60" placeholder="Mi Barbería"></label>
+        <div class="grid2">
+          <label class="field"><span>Emoji/logo (web)</span>
+            <input id="c_logo" type="text" maxlength="8" placeholder="✂️"></label>
+          <label class="field"><span>Emoji/logo (panel)</span>
+            <input id="c_logoPanel" type="text" maxlength="8" placeholder="💈"></label>
+        </div>
+        <label class="field"><span>Frase de portada</span>
+          <input id="c_tagline" type="text" maxlength="120" placeholder="Reserva tu cita en segundos"></label>
+        <label class="field"><span>Texto del pie de página</span>
+          <input id="c_footer" type="text" maxlength="120" placeholder="(opcional)"></label>
+        <label class="field"><span>WhatsApp (solo dígitos, con código de país)</span>
+          <input id="c_whatsapp" type="tel" inputmode="numeric" placeholder="18095551234"></label>
+        <div class="stack">
+          <button class="btn primary" data-save="identidad" type="button">Guardar identidad</button>
+          <button class="btn ghost" data-reset="todo" type="button">Restablecer todo</button>
+        </div>
+      </section>
+
+      <!-- SERVICIOS -->
+      <section class="card tabpane" data-pane="servicios" hidden>
+        <h2>Servicios</h2>
+        <p class="muted">Un servicio por línea. Se muestran en la lista de reservas.</p>
+        <label class="field"><span>Lista de servicios</span>
+          <textarea id="c_servicios" rows="10" placeholder="Corte de cabello&#10;Barba&#10;Corte + barba&#10;Otro"></textarea></label>
+        <div class="stack">
+          <button class="btn primary" data-save="servicios" type="button">Guardar servicios</button>
+          <button class="btn ghost" data-reset="servicios" type="button">Restablecer servicios</button>
+        </div>
+      </section>
+
+      <!-- HORARIO -->
+      <section class="card tabpane" data-pane="horario" hidden>
+        <h2>Horario y agenda</h2>
+        <div class="grid2">
+          <label class="field"><span>Hora de apertura</span>
+            <input id="c_horaInicio" type="time" step="60"></label>
+          <label class="field"><span>Hora de cierre</span>
+            <input id="c_horaFin" type="time" step="60"></label>
+        </div>
+        <div class="grid2">
+          <label class="field"><span>Intervalo entre citas (min)</span>
+            <input id="c_intervalo" type="number" min="5" max="240" step="5"></label>
+          <label class="field"><span>Anticipación mínima (min)</span>
+            <input id="c_minAnticipacion" type="number" min="0" max="1440" step="5"></label>
+        </div>
+        <label class="field"><span>Máximo de citas por día (0 = sin límite)</span>
+          <input id="c_maxCitasPorDia" type="number" min="0" max="100" step="1"></label>
+        <div class="field"><span>Días abiertos</span>
+          <div class="dias" id="c_diasAbiertos"></div>
+        </div>
+        <div class="stack">
+          <button class="btn primary" data-save="horario" type="button">Guardar horario</button>
+          <button class="btn ghost" data-reset="horario" type="button">Restablecer horario</button>
+        </div>
+      </section>
+
+      <!-- APARIENCIA -->
+      <section class="card tabpane" data-pane="apariencia" hidden>
+        <h2>Apariencia</h2>
+        <div class="colores">
+          <label class="field"><span>Color principal</span>
+            <input id="c_colorPrincipal" type="color"></label>
+          <label class="field"><span>Color principal oscuro</span>
+            <input id="c_colorPrincipalOscuro" type="color"></label>
+          <label class="field"><span>Fondo</span>
+            <input id="c_colorFondo" type="color"></label>
+          <label class="field"><span>Color de la barra (tema)</span>
+            <input id="c_colorTema" type="color"></label>
+        </div>
+        <div class="stack">
+          <button class="btn primary" data-save="apariencia" type="button">Guardar apariencia</button>
+          <button class="btn ghost" data-reset="colores" type="button">Restablecer colores</button>
+        </div>
+      </section>
+
+      <!-- TEXTOS -->
+      <section class="card tabpane" data-pane="textos" hidden>
+        <h2>Textos de la interfaz</h2>
+        <div id="c_textos"></div>
+        <div class="stack">
+          <button class="btn primary" data-save="textos" type="button">Guardar textos</button>
+          <button class="btn ghost" data-reset="textos" type="button">Restablecer textos</button>
+        </div>
+      </section>
+
+      <!-- WHATSAPP -->
+      <section class="card tabpane" data-pane="whatsapp" hidden>
+        <h2>WhatsApp automático (OpenWA)</h2>
+        <p class="muted">Envía avisos por WhatsApp usando un gateway <b>OpenWA</b> self-hosted (motor Baileys). Si lo dejas desactivado, la app funciona igual.</p>
+
+        <label class="field row-check">
+          <input id="c_waHabilitado" type="checkbox">
+          <span>Activar envío de WhatsApp</span>
+        </label>
+
+        <div class="grid2">
+          <label class="field"><span>URL del gateway</span>
+            <input id="c_waUrl" type="text" placeholder="http://localhost:2785"></label>
+          <label class="field"><span>API Key</span>
+            <input id="c_waApiKey" type="password" placeholder="X-API-Key" autocomplete="off"></label>
+        </div>
+        <div class="grid2">
+          <label class="field"><span>ID/nombre de la sesión</span>
+            <input id="c_waSesion" type="text" placeholder="barberia"></label>
+          <label class="field"><span>WhatsApp del barbero (avisos)</span>
+            <input id="c_waBarbero" type="tel" inputmode="numeric" placeholder="18097674597"></label>
+        </div>
+
+        <div class="field"><span>¿Qué avisos enviar?</span>
+          <div class="dias">
+            <label><input id="c_waAvisoBarbero" type="checkbox"> Al barbero (nuevas y canceladas)</label>
+            <label><input id="c_waConfirmar" type="checkbox"> Confirmación al cliente</label>
+            <label><input id="c_waRecordatorio" type="checkbox"> Recordatorio al cliente (día antes)</label>
+            <label><input id="c_waCancelacion" type="checkbox"> Aviso de cancelación al cliente</label>
+          </div>
+        </div>
+        <label class="field"><span>Hora para enviar los recordatorios</span>
+          <input id="c_waRecordatorioHora" type="time" step="60"></label>
+
+        <details class="plantillas">
+          <summary>Plantillas de mensajes</summary>
+          <p class="muted">Variables: <code>{nombre}</code>, <code>{fecha}</code>, <code>{hora}</code>, <code>{servicio}</code>, <code>{telefono}</code>, <code>{notas}</code>, <code>{negocio}</code>.</p>
+          <label class="field"><span>Nueva cita (al barbero)</span>
+            <textarea id="c_plantNueva" rows="3"></textarea></label>
+          <label class="field"><span>Cancelación (al barbero)</span>
+            <textarea id="c_plantCancelBarbero" rows="3"></textarea></label>
+          <label class="field"><span>Confirmación (al cliente)</span>
+            <textarea id="c_plantConfirmacion" rows="3"></textarea></label>
+          <label class="field"><span>Recordatorio (al cliente)</span>
+            <textarea id="c_plantRecordatorio" rows="3"></textarea></label>
+          <label class="field"><span>Cancelación (al cliente)</span>
+            <textarea id="c_plantCancelCliente" rows="3"></textarea></label>
+        </details>
+
+        <div class="stack">
+          <button class="btn primary" data-save="whatsapp" type="button">Guardar WhatsApp</button>
+        </div>
+
+        <hr class="sep">
+        <h3 class="sub">Conexión</h3>
+        <div id="waEstado" class="wa-estado muted">Pulsa "Comprobar".</div>
+        <div id="waQrBox" class="wa-qr" hidden></div>
+        <div class="stack">
+          <button class="btn ghost" id="btnWaEstado" type="button">Comprobar conexión</button>
+          <button class="btn ghost" id="btnWaIniciar" type="button">Crear / iniciar sesión</button>
+        </div>
+        <div class="grid2" style="margin-top:10px">
+          <label class="field"><span>Enviar prueba a</span>
+            <input id="c_waPrueba" type="tel" inputmode="numeric" placeholder="18095551234"></label>
+          <div class="field"><span>&nbsp;</span>
+            <button class="btn ghost" id="btnWaProbar" type="button">Enviar mensaje de prueba</button></div>
+        </div>
+      </section>
+
+      <!-- ICONOS -->
+      <section class="card tabpane" data-pane="iconos" hidden>
+        <h2>Iconos de la aplicación</h2>
+        <p class="muted">Sube una imagen cuadrada (PNG/JPG). Se generan los tamaños de la PWA.</p>
+        <label class="field"><span>Imagen</span>
+          <input id="c_icono" type="file" accept="image/*"></label>
+        <div class="iconos-prev">
+          <figure><img id="prev192" src="/icon-192.png" alt="192"><figcaption>192×192</figcaption></figure>
+          <figure><img id="prev512" src="/icon-512.png" alt="512"><figcaption>512×512</figcaption></figure>
+          <figure><img id="prev180" src="/apple-touch-icon.png" alt="180"><figcaption>180×180</figcaption></figure>
+          <figure><img id="prevFav" src="/favicon.png" alt="fav"><figcaption>favicon</figcaption></figure>
+        </div>
+        <div class="stack">
+          <button class="btn primary" id="btnSubirIcono" type="button" disabled>Subir iconos</button>
+          <button class="btn ghost" id="btnResetIcono" type="button">Restablecer iconos</button>
+        </div>
+      </section>
+
+      <!-- SEGURIDAD -->
+      <section class="card tabpane" data-pane="seguridad" hidden>
+        <h2>Contraseña del panel</h2>
+        <p id="passInfo" class="muted"></p>
+        <label class="field"><span>Contraseña actual del panel</span>
+          <input id="c_passActual" type="password" autocomplete="current-password"></label>
+        <label class="field"><span>Nueva contraseña del panel (mín. 4 caracteres)</span>
+          <input id="c_passNueva" type="password" autocomplete="new-password"></label>
+        <div class="stack">
+          <button class="btn primary" id="btnPass" type="button">Cambiar contraseña del panel</button>
+        </div>
+        <p class="muted" style="margin-top:16px">La contraseña de esta sección de desarrollador se define con la variable de entorno <b>DEV_PASSWORD</b> y no se puede cambiar desde aquí.</p>
+      </section>
+
+      <!-- AVANZADO -->
+      <section class="card tabpane" data-pane="avanzado" hidden>
+        <h2>Avanzado</h2>
+        <p class="muted">Copia la configuración completa o pégala para restaurarla.</p>
+        <label class="field"><span>Configuración (JSON)</span>
+          <textarea id="c_json" rows="12" spellcheck="false"></textarea></label>
+        <div class="stack">
+          <button class="btn primary" id="btnImportJson" type="button">Aplicar JSON</button>
+          <button class="btn ghost" id="btnReloadJson" type="button">Recargar desde el servidor</button>
+        </div>
+      </section>
+
+      <footer><span id="foot"></span></footer>
+    </main>
+  </div>
+
+  <script src="/dev.js"></script>
+</body>
+</html>
